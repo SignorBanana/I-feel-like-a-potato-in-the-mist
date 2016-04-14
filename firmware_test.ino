@@ -1,9 +1,3 @@
-/*
-Currently being simulated with a keyboard
-Set the PrevSensor initial state
-Change readSensor(int sensor) and take out Serial.read()
-*/
-
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
@@ -30,9 +24,9 @@ void setup() {
   Motor2Boolean = false;
 
   // set SENSOR pins as digital in
-  Sensor0 = 10; // Sensor0 connected to this digital pin number
-  Sensor1 = 11; // Sensor1 connected to this digital pin number
-  Sensor2 = 12; // Sensor1 connected to this digital pin number
+  Sensor0 = 5; // Sensor0 connected to this digital pin number
+  Sensor1 = 6; // Sensor1 connected to this digital pin number
+  Sensor2 = 7; // Sensor1 connected to this digital pin number
   pinMode(Sensor0, INPUT); // Define Sensor0 as a digital in pin
   pinMode(Sensor1, INPUT); // Define Sensor2 as a digital in pin
   pinMode(Sensor2, INPUT); // Define Sensor2 as a digital in pin
@@ -50,8 +44,8 @@ void setup() {
 
   //initial motor speed
   initializeShield();
-  PrevSensor0 = HIGH;//readSensor(Sensor0);
-  PrevSensor1 = LOW;//ureadSensor(Sensor1);
+  PrevSensor0 = readSensor(Sensor0);//HIGH;
+  PrevSensor1 = readSensor(Sensor1);//LOW;
   PrevSensor2 = readSensor(Sensor2);
 
 
@@ -59,60 +53,60 @@ void setup() {
 
 // the loop function runs over and over again forever
 void loop() {
-  if (Serial.available() > 0) {
-	inChar = Serial.read();
-	Serial.print("You sent me: \'");
-	Serial.write(inChar);
-	Serial.println("");
-	Serial.println("Prev0="+ PrevSensor0);// + " Prev1="+PrevSensor0+" prev2="+PrevSensor2);
-    
-  }
+//  if (Serial.available() > 0) {
+//    inChar = Serial.read();
+//    Serial.print("You sent me: \'");
+//    Serial.write(inChar);
+//    Serial.println("");
+//    Serial.println("Prev0="+ PrevSensor0);// + " Prev1="+PrevSensor0+" prev2="+PrevSensor2);
+//    
+//  }
 
 
   if (PrevSensor0 == HIGH && readSensor(Sensor0) == LOW) // if hole
   {
 
-	PrevSensor0 = readSensor(Sensor0);
-	Motor1Boolean = true;
-	Motor2Boolean = true;
+    PrevSensor0 = readSensor(Sensor0);
+    Motor1Boolean = true;
+    Motor2Boolean = true;
 
-	moveMotor(myMotor1, FORWARD); // move Motor1
-	moveMotor(myMotor2, FORWARD); // move Motor2
-	delay(10);
+    moveMotor(myMotor1, FORWARD); // move Motor1
+    moveMotor(myMotor2, FORWARD); // move Motor2
+    delay(10);
   }
 
   if ( Motor1Boolean == true)
   {
-	if (PrevSensor1 == LOW && readSensor(Sensor1) == HIGH) // if hole
-	{
-  	Motor1Boolean = false;
-  	stopMotor(myMotor1); // stop Motor1
-	}
+    if (PrevSensor1 == LOW && readSensor(Sensor1) == HIGH) // if hole
+    {
+      Motor1Boolean = false;
+      stopMotor(myMotor1); // stop Motor1
+    }
   }
 
   if ( Motor2Boolean == true)
   {
-	if (PrevSensor2 == LOW && readSensor(Sensor2) == HIGH) // if hole
-	{
-  	Motor2Boolean = false;
-  	stopMotor(myMotor2); // stop Motor2
-	}
+    if (PrevSensor2 == LOW && readSensor(Sensor2) == HIGH) // if hole
+    {
+      Motor2Boolean = false;
+      stopMotor(myMotor2); // stop Motor2
+    }
   }
 }
 int readSensor(int sensor) {
-  int highOrLow;
-  switch (inChar) {
-	case 'u':
-  	// move mouse up
-  	highOrLow = HIGH;
-  	break;
-	case 'd':
-  	// move mouse down
-  	highOrLow = LOW;
-  	break;
-  }
-  return highOrLow;
-  //return digitalRead(sensor);
+//  int highOrLow;
+//  switch (inChar) {
+//    case 'u':
+//      // move mouse up
+//      highOrLow = HIGH;
+//      break;
+//    case 'd':
+//      // move mouse down
+//      highOrLow = LOW;
+//      break;
+//  }
+//  return highOrLow;
+  return digitalRead(sensor);
 
 }
 void moveMotor(Adafruit_DCMotor *myMotor, int directionFB, uint8_t speed) {
